@@ -82,115 +82,93 @@ def testUser ():
 
     for i in range(1):
         with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
+            userSegmentsDicCommands={}
+            commandDicTest={}
 
-            counter=1
-            counterTotal=1
-            for row in file:
-                if counterTotal<5001:
-                    counter+=1
-                    counterTotal+=1
-                    if counter==101:
-                        counter=1
+            for j,row in enumerate(file.readlines()):
+                if j<5000:
                     continue
-                if commandDicTest.__contains__(row[:-1]+"_"+str(counter))==False:
-                    commandDicTest[row[:-1]+"_"+str(counter)]=1
+                if commandDicTest.__contains__(row[:-1]+"_"+str(j%100))==False:
+                    commandDicTest[row[:-1]+"_"+str(j%100)]=1
                 else:
-                    commandDicTest[row[:-1]+"_"+str(counter)]+=1
+                    commandDicTest[row[:-1]+"_"+str(j%100)]+=1
+                if (j-99)%100==0:
+                    userSegmentsDicCommands[int((j-5000+1)/100)]=commandDicTest
+                    commandDicTest={}
 
-                if counter==100:
-                    break
-                    counter=1
-                counter += 1
-                counterTotal += 1
 
-    for i in range(1):
-        with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
-
-            lines = file.readlines()
-            counter = 1
-            counterTotal=1
-
-            for row in range(len(lines)):
-                if counterTotal < 5001:
-                    counter+=1
-                    counterTotal+=1
-                    if counter==101:
-                        counter=1
-                    continue
-                if counter % 100 == 0:
-                    counter += 1
-                    continue
-                if ngram2DicTest.__contains__(lines[row][:-1] + "_" + lines[row + 1][:-1]) == False:
-                    ngram2DicTest[lines[row][:-1] + "_" + lines[row + 1][:-1]] = 1
-                else:
-                    ngram2DicTest[lines[row][:-1] + "_" + lines[row + 1][:-1]] += 1
-
-                if counter==101:
-                    break
-                    counter=1
-                counter += 1
-                counterTotal+=1
 
 
     for i in range(1):
         with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
 
-            lines = file.readlines()
-            counter = 1
 
-            for row in range(len(lines)):
-                if counterTotal < 5001:
-                    counter+=1
-                    counterTotal+=1
-                    continue
-                if (counter + 1) % 100 == 0 or counter % 100 == 0:
-                    counter += 1
-                    continue
-                if ngram3DicTest.__contains__(lines[row][:-1] + "_" + lines[row + 1][:-1] + "_" + lines[row + 2][
-                                                                                              :-1]) == False:
-                    ngram3DicTest[lines[row][:-1] + "_" + lines[row + 1][:-1] + "_" + lines[row + 2][:-1]] = 1
-                else:
-                    ngram3DicTest[lines[row][:-1] + "_" + lines[row + 1][:-1] + "_" + lines[row + 2][:-1]] += 1
+                userSegmentsDic2NGram = {}
+                ngram2DicTest={}
+                fileLines=file.readlines()
+                for j, row in enumerate(fileLines):
+                    if j < 5000:
+                        continue
+                    if  (j - 99) % 100 == 0:
+                        userSegmentsDic2NGram[int((j - 5000+1) / 100)] = ngram2DicTest
+                        ngram2DicTest={}
+                        continue
+                    if ngram2DicTest.__contains__(fileLines[j][:-1] + "_" + fileLines[j + 1][:-1]) == False:
+                        ngram2DicTest[fileLines[j][:-1] + "_" + fileLines[j + 1][:-1]] = 1
+                    else:
+                        ngram2DicTest[fileLines[j][:-1] + "_" + fileLines[j + 1][:-1]] += 1
 
-                if counter==101:
-                    break
-                    counter=1
 
-                counter += 1
-                counterTotal+=1
+
 
 
     for i in range(1):
         with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
 
-            lines = file.readlines()
-            counter = 1
-
-            for row in range(len(lines)):
-                if counterTotal < 5001:
-                    counter+=1
-                    counterTotal += 1
+            userSegmentsDic3NGram  = {}
+            ngram3DicTest={}
+            fileLines=file.readlines()
+            for j, row in enumerate(fileLines):
+                if j < 5000:
                     continue
-                if (counter + 2) % 100 == 0 or (counter + 1) % 100 == 0 or counter % 100 == 0:
-                    counter += 1
+                if  (j-98)%100==0 or (j-99)%100==0:
+                    if (j-99)%100==0:
+                        userSegmentsDic3NGram [int((j - 5000+1) / 100)] = ngram3DicTest
+                        ngram3DicTest={}
                     continue
-                if ngram4DicTest.__contains__(lines[row][:-1] + "_" + lines[row + 1][:-1] + "_" + lines[row + 2][
-                                                                                              :-1] + "_" + lines[
-                                                                                                                       row + 3][
-                                                                                                           :-1]) == False:
-                    ngram4DicTest[lines[row][:-1] + "_" + lines[row + 1][:-1] + "_" + lines[row + 2][:-1] + "_" + lines[
-                                                                                                                  row + 3][
-                                                                                                              :-1]] = 1
+                if ngram3DicTest.__contains__(fileLines[j][:-1] + "_" + fileLines[j + 1][:-1] + "_" + fileLines[j + 2][
+                                                                                                  :-1]) == False:
+                    ngram3DicTest[fileLines[j][:-1] + "_" + fileLines[j + 1][:-1] + "_" + fileLines[j + 2][:-1]] = 1
                 else:
-                    ngram4DicTest[lines[row][:-1] + "_" + lines[row + 1][:-1] + "_" + lines[row + 2][:-1] + "_" + lines[
-                                                                                                                  row + 3][
-                                                                                                              :-1]] += 1
+                    ngram3DicTest[fileLines[j][:-1] + "_" + fileLines[j + 1][:-1] + "_" + fileLines[j + 2][:-1]] += 1
 
-                if counter==101:
-                    break
-                    counter=1
-                counter += 1
-                counterTotal+=1
+
+
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
+
+            userSegmentsDic4NGram  = {}
+            ngram4DicTest={}
+            fileLines = file.readlines()
+            for j, row in enumerate(fileLines):
+                if j < 5000:
+                    continue
+                if  (j - 97) % 100 == 0 or (j - 98) % 100 == 0 or (j - 99) % 100 == 0:
+                    if (j-99)%100==0:
+                        userSegmentsDic4NGram[int((j - 5000+1) / 100)] = ngram4DicTest
+                        ngram4DicTest={}
+                    continue
+                if ngram4DicTest.__contains__(fileLines[j][:-1] + "_" + fileLines[j + 1][:-1] + "_" + fileLines[j + 2][
+                                                                                                  :-1] + "_" + fileLines[j + 3][:-1]) == False:
+                    ngram4DicTest[fileLines[j][:-1] + "_" + fileLines[j + 1][:-1] + "_" + fileLines[j + 2][:-1] + "_" + fileLines[j + 3][:-1]] = 1
+                else:
+                    ngram4DicTest[fileLines[j][:-1] + "_" + fileLines[j + 1][:-1] + "_" + fileLines[j + 2][:-1] + "_" + fileLines[j + 3][:-1]] += 1
+
+    return userSegmentsDicCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram
+
+
+
+
 
 
 commandDic={}
@@ -203,13 +181,16 @@ ngram2DicTest={}
 ngram3DicTest={}
 ngram4DicTest={}
 
+userSegmentsDicCommands = {}
+userSegmentsDic2NGram = {}
+userSegmentsDic3NGram = {}
+userSegmentsDic4NGram = {}
+
 createCommandDic()
 createNGram2Dic()
 createNGram3Dic()
 createNGram4Dic()
-testUser()
-for x in ngram4Dic:
-    print(str(x)+"_"+str(ngram4Dic[x]))
+userSegmentsDicCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=testUser()
 
 
 
