@@ -212,4 +212,5 @@ for x in ngram4Dic:
     print(str(x)+"_"+str(ngram4Dic[x]))
 
 
+
 print("finished")
