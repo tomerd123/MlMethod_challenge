@@ -12,6 +12,8 @@ def createCommandDic ():
 
             counter=1
             for row in file:
+                if counter==5001:
+                    break
                 if commandDic.__contains__(row[:-1]+"_"+str(counter))==False:
                     commandDic[row[:-1]+"_"+str(counter)]=1
                 else:
@@ -28,6 +30,8 @@ def createNGram2Dic ():
             counter = 1
 
             for row in range(len(lines)):
+                if counter==5001:
+                    break
                 if counter%100==0:
                     counter+=1
                     continue
@@ -44,6 +48,8 @@ def createNGram3Dic ():
             counter = 1
 
             for row in range(len(lines)):
+                if counter==5001:
+                    break
                 if (counter+1)%100==0 or counter%100==0:
                     counter+=1
                     continue
@@ -61,6 +67,8 @@ def createNGram4Dic ():
             counter = 1
 
             for row in range(len(lines)):
+                if counter==5001:
+                    break
                 if (counter+2)%100==0 or (counter+1)%100==0 or counter%100==0:
                     counter+=1
                     continue
