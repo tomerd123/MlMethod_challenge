@@ -22,6 +22,20 @@ def createCommandDic ():
                 if counter==101:
                     counter=1
 
+def createCommandProbabilityDic ():
+
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
+            commandDic={}
+
+            for row in file:
+
+                if commandDic.__contains__(row[:-1])==False:
+                    commandDic[row[:-1]]=1
+                else:
+                    commandDic[row[:-1]]+=1
+    return commandDic
+
 def createNGram2Dic ():
     for i in range(1):
         with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
@@ -97,7 +111,21 @@ def testUser ():
                     commandDicTest={}
 
 
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
+            userSegmentsDicProbabilityCommands={}
+            commandDicTest={}
 
+            for j,row in enumerate(file.readlines()):
+                if j<5000:
+                    continue
+                if commandDicTest.__contains__(row[:-1])==False:
+                    commandDicTest[row[:-1]]=1
+                else:
+                    commandDicTest[row[:-1]]+=1
+                if (j-99)%100==0:
+                    userSegmentsDicProbabilityCommands[int((j-5000+1)/100)]=commandDicTest
+                    commandDicTest={}
 
     for i in range(1):
         with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
@@ -164,7 +192,7 @@ def testUser ():
                 else:
                     ngram4DicTest[fileLines[j][:-1] + "_" + fileLines[j + 1][:-1] + "_" + fileLines[j + 2][:-1] + "_" + fileLines[j + 3][:-1]] += 1
 
-    return userSegmentsDicCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram
+    return userSegmentsDicCommands,userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram
 
 
 
@@ -182,6 +210,7 @@ ngram3DicTest={}
 ngram4DicTest={}
 
 userSegmentsDicCommands = {}
+userSegmentsDicProbabilityCommands={}
 userSegmentsDic2NGram = {}
 userSegmentsDic3NGram = {}
 userSegmentsDic4NGram = {}
@@ -190,7 +219,8 @@ createCommandDic()
 createNGram2Dic()
 createNGram3Dic()
 createNGram4Dic()
-userSegmentsDicCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=testUser()
+commandDic=createCommandProbabilityDic()
+userSegmentsDicCommands,userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=testUser()
 
 
 
