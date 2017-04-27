@@ -10,31 +10,30 @@ def createCommandDic ():
     for i in range(1):
         with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
 
-            counter=1
-            for row in file:
-                if counter==5001:
-                    break
-                if commandDic.__contains__(row[:-1]+"_"+str(counter))==False:
-                    commandDic[row[:-1]+"_"+str(counter)]=1
+            for j,row in enumerate(file.readlines()):
+                if j>=5000:
+                    continue
+                if commandDic.__contains__(row[:-1]+"_"+str(j%100))==False:
+                    commandDic[row[:-1]+"_"+str(j%100)]=1
                 else:
-                    commandDic[row[:-1]+"_"+str(counter)]+=1
-                counter+=1
-                if counter==101:
-                    counter=1
+                    commandDic[row[:-1]+"_"+str(j%100)]+=1
+
 
 def createCommandProbabilityDic ():
 
     for i in range(1):
         with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
-            commandDic={}
-
-            for row in file:
-
-                if commandDic.__contains__(row[:-1])==False:
-                    commandDic[row[:-1]]=1
+            commandProbabilityDic={}
+            commandPDic={}
+            for j,row in enumerate(file.readlines()):
+                if j>=5000:
+                    continue
+                if commandPDic.__contains__(row[:-1])==False:
+                    commandPDic[row[:-1]]=1
                 else:
-                    commandDic[row[:-1]]+=1
-    return commandDic
+                    commandPDic[row[:-1]]+=1
+    commandProbabilityDic=commandPDic
+    return commandProbabilityDic
 
 def createNGram2Dic ():
     for i in range(1):
@@ -200,6 +199,7 @@ def testUser ():
 
 
 commandDic={}
+commandProbabilityDic={}
 ngram2Dic={}
 ngram3Dic={}
 ngram4Dic={}
@@ -219,8 +219,69 @@ createCommandDic()
 createNGram2Dic()
 createNGram3Dic()
 createNGram4Dic()
-commandDic=createCommandProbabilityDic()
+commandProbabilityDic=createCommandProbabilityDic()
 userSegmentsDicCommands,userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=testUser()
+
+
+def checkDics():
+    sum=0
+    for k in userSegmentsDicCommands:
+        for kk in userSegmentsDicCommands[k]:
+            sum+=userSegmentsDicCommands[k][kk]
+    print(sum)
+
+    sum=0
+    for k in userSegmentsDicProbabilityCommands:
+        for kk in userSegmentsDicProbabilityCommands[k]:
+            sum+=userSegmentsDicProbabilityCommands[k][kk]
+    print(sum)
+
+    sum=0
+    for k in userSegmentsDic2NGram:
+        for kk in userSegmentsDic2NGram[k]:
+            sum+=userSegmentsDic2NGram[k][kk]
+    print(sum)
+
+    sum=0
+    for k in userSegmentsDic3NGram:
+        for kk in userSegmentsDic3NGram[k]:
+            sum+=userSegmentsDic3NGram[k][kk]
+    print(sum)
+
+    sum=0
+    for k in userSegmentsDic4NGram:
+        for kk in userSegmentsDic4NGram[k]:
+            sum+=userSegmentsDic4NGram[k][kk]
+    print(sum)
+
+
+    sum=0
+    for k in commandDic:
+        sum+=commandDic[k]
+    print(sum)
+
+    sum=0
+    for k in commandProbabilityDic:
+        sum+=commandProbabilityDic[k]
+    print(sum)
+
+    sum=0
+    for k in ngram2Dic:
+        sum+=ngram2Dic[k]
+    print(sum)
+
+    sum=0
+    for k in ngram3Dic:
+        sum+=ngram3Dic[k]
+    print(sum)
+
+    sum=0
+    for k in ngram4Dic:
+        sum+=ngram4Dic[k]
+    print(sum)
+
+
+
 
 
 
