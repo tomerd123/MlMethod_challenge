@@ -5,11 +5,13 @@ import io
 import csv
 import numpy as np
 
+
+#train by global trainset
 def createCommandDic ():
 
     for i in range(1):
         with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
-
+            commandDic={}
             for j,row in enumerate(file.readlines()):
                 if j>=5000:
                     continue
@@ -18,7 +20,7 @@ def createCommandDic ():
                 else:
                     commandDic[row[:-1]+"_"+str(j%100)]+=1
 
-
+            return commandDic
 def createCommandProbabilityDic ():
 
     for i in range(1):
@@ -38,7 +40,7 @@ def createCommandProbabilityDic ():
 def createNGram2Dic ():
     for i in range(1):
         with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
-
+            ngram2Dic={}
             lines=file.readlines()
             counter = 1
 
@@ -53,13 +55,14 @@ def createNGram2Dic ():
                 else:
                     ngram2Dic[lines[row][:-1] + "_" + lines[row+1][:-1]] += 1
                 counter += 1
+            return ngram2Dic
 def createNGram3Dic ():
     for i in range(1):
         with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
 
             lines=file.readlines()
             counter = 1
-
+            ngram3Dic={}
             for row in range(len(lines)):
                 if counter==5001:
                     break
@@ -71,11 +74,13 @@ def createNGram3Dic ():
                 else:
                     ngram3Dic[lines[row][:-1] + "_" + lines[row+1][:-1]+ "_" + lines[row+2][:-1]] += 1
                 counter += 1
+            return ngram3Dic
 
 def createNGram4Dic ():
     for i in range(1):
         with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
 
+            ngram4Dic={}
             lines=file.readlines()
             counter = 1
 
@@ -90,6 +95,121 @@ def createNGram4Dic ():
                 else:
                     ngram4Dic[lines[row][:-1] + "_" + lines[row+1][:-1]+ "_" + lines[row+2][:-1]+ "_" + lines[row+3][:-1]] += 1
                 counter += 1
+            return ngram4Dic
+
+#train per segment
+def createPerSegmentCommandDic ():
+
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
+            userSegmentsDicCommands = {}
+            perSegCommandDic={}
+            for j,row in enumerate(file.readlines()):
+                if j>=5000:
+                    continue
+                if perSegCommandDic.__contains__(row[:-1]+"_"+str(j%100))==False:
+                    perSegCommandDic[row[:-1]+"_"+str(j%100)]=1
+                else:
+                    perSegCommandDic[row[:-1]+"_"+str(j%100)]+=1
+
+                if (j-99)%100==0:
+                    userSegmentsDicCommands[int((j-5000+1)/100)]=perSegCommandDic
+                    perSegCommandDic={}
+            return userSegmentsDicCommands
+
+def createPerSementCommandProbabilityDic ():
+
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User'+str(i), 'rt',encoding="utf8") as file:
+            userSegmentCommandProbabilityDic={}
+            commandProbPerSegmentDic={}
+            for j,row in enumerate(file.readlines()):
+                if j>=5000:
+                    continue
+                if commandProbPerSegmentDic.__contains__(row[:-1])==False:
+                    commandProbPerSegmentDic[row[:-1]]=1
+                else:
+                    commandProbPerSegmentDic[row[:-1]]+=1
+            if (j - 99) % 100 == 0:
+                userSegmentCommandProbabilityDic[int((j - 5000 + 1) / 100)] = commandProbPerSegmentDic
+                commandProbPerSegmentDic = {}
+        return userSegmentCommandProbabilityDic
+
+
+def createPerSegmentNGram2Dic ():
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
+
+            lines=file.readlines()
+            perSeg2NGramDic={}
+            userSegments2NGramDic={}
+
+            for j,row in enumerate(lines):
+                if j>=5000:
+                    continue
+                if (j - 99) % 100 == 0:
+                    userSegments2NGramDic[int((j - 5000 + 1) / 100)] = perSeg2NGramDic
+                    perSeg2NGramDic = {}
+                    continue
+
+                if perSeg2NGramDic.__contains__(row[:-1] + "_" + lines[j+1][:-1]) == False:
+                    perSeg2NGramDic[row[:-1] + "_" + lines[j+1][:-1]] = 1
+                else:
+                    perSeg2NGramDic[row[:-1] + "_" + lines[j+1][:-1]] += 1
+
+
+            return userSegments2NGramDic
+
+def createPerSegmentNGram3Dic ():
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
+
+            lines=file.readlines()
+            ngram3PerSegDic={}
+            userSegments3NGramDic={}
+
+            for j,row in enumerate(lines):
+                if j>=5000:
+                    continue
+                if (j - 98) % 100 == 0 or (j - 99) % 100 == 0:
+                    if (j - 99) % 100 == 0:
+                        userSegments3NGramDic[int((j - 5000 + 1) / 100)] = ngram3PerSegDic
+                        ngram3PerSegDic = {}
+                    continue
+                if ngram3PerSegDic.__contains__(row[:-1] + "_" + lines[j+1][:-1]+ "_" + lines[j+2][:-1]) == False:
+                    ngram3PerSegDic[row[:-1] + "_" + lines[j+1][:-1]+ "_" + lines[j+2][:-1]] = 1
+                else:
+                    ngram3PerSegDic[row[:-1] + "_" + lines[j+1][:-1]+ "_" + lines[j+2][:-1]] += 1
+
+            return userSegments3NGramDic
+
+
+def createPerSegmentNGram4Dic ():
+    for i in range(1):
+        with io.open('E:/challenge/training_data/User' + str(i), 'rt', encoding="utf8") as file:
+
+            lines=file.readlines()
+            userSegments4NGramDic={}
+            ngram4PerSegDic={}
+
+            for j,row in enumerate(lines):
+                if j>=5000:
+                    continue
+                if (j - 97) % 100 == 0 or (j - 98) % 100 == 0 or (j - 99) % 100 == 0:
+                    if (j - 99) % 100 == 0:
+                        userSegments4NGramDic[int((j - 5000 + 1) / 100)] = ngram4PerSegDic
+                        ngram4PerSegDic = {}
+                    continue
+                if ngram4PerSegDic.__contains__(row[:-1] + "_" + lines[j+1][:-1]+ "_" + lines[j+2][:-1]+ "_" + lines[j+3][:-1]) == False:
+                    ngram4PerSegDic[row[:-1] + "_" + lines[j+1][:-1]+ "_" + lines[j+2][:-1]+ "_" + lines[j+3][:-1]] = 1
+                else:
+                    ngram4PerSegDic[row[:-1] + "_" + lines[j+1][:-1]+ "_" + lines[j+2][:-1]+ "_" + lines[j+3][:-1]] += 1
+
+
+        return userSegments4NGramDic
+
+
+#test per segment
 
 def testUser ():
 
@@ -197,33 +317,28 @@ def testUser ():
 
 
 
+#global train-set
+globalTrainCommandPosDic=createCommandDic()
+globalTrain2NGramDic=createNGram2Dic()
+globalTrain3NGramDic=createNGram3Dic()
+globalTrain4NGramDic=createNGram4Dic()
+globalTrainProbCommandDic=createCommandProbabilityDic()
 
-commandDic={}
-commandProbabilityDic={}
-ngram2Dic={}
-ngram3Dic={}
-ngram4Dic={}
+#per segment train-set
 
-commandDicTest={}
-ngram2DicTest={}
-ngram3DicTest={}
-ngram4DicTest={}
+perSegTrainCommandPosDic=createPerSegmentCommandDic()
+perSegTrain2NGramDic=createPerSegmentNGram2Dic()
+perSegTrain3NGramDic=createPerSegmentNGram3Dic()
+perSegTrain4NGramDic=createPerSegmentNGram4Dic()
+perSegTrainProbCommandDic=createPerSementCommandProbabilityDic()
 
-userSegmentsDicCommands = {}
-userSegmentsDicProbabilityCommands={}
-userSegmentsDic2NGram = {}
-userSegmentsDic3NGram = {}
-userSegmentsDic4NGram = {}
-
-createCommandDic()
-createNGram2Dic()
-createNGram3Dic()
-createNGram4Dic()
-commandProbabilityDic=createCommandProbabilityDic()
+#per segment test-set
 userSegmentsDicCommands,userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=testUser()
 
 
 def checkDics():
+
+    #test per segment
     sum=0
     for k in userSegmentsDicCommands:
         for kk in userSegmentsDicCommands[k]:
@@ -254,35 +369,68 @@ def checkDics():
             sum+=userSegmentsDic4NGram[k][kk]
     print(sum)
 
+    #train per segment
 
+    sum = 0
+    for k in perSegTrainCommandPosDic:
+        for kk in perSegTrainCommandPosDic[k]:
+            sum += perSegTrainCommandPosDic[k][kk]
+    print(sum)
+
+    sum = 0
+    for k in perSegTrainProbCommandDic:
+        for kk in perSegTrainProbCommandDic[k]:
+            sum += perSegTrainProbCommandDic[k][kk]
+    print(sum)
+
+    sum = 0
+    for k in perSegTrain2NGramDic:
+        for kk in perSegTrain2NGramDic[k]:
+            sum += perSegTrain2NGramDic[k][kk]
+    print(sum)
+
+    sum = 0
+    for k in perSegTrain3NGramDic:
+        for kk in perSegTrain3NGramDic[k]:
+            sum += perSegTrain3NGramDic[k][kk]
+    print(sum)
+
+    sum = 0
+    for k in perSegTrain4NGramDic:
+        for kk in perSegTrain4NGramDic[k]:
+            sum += perSegTrain4NGramDic[k][kk]
+    print(sum)
+
+    #train global
     sum=0
-    for k in commandDic:
-        sum+=commandDic[k]
+    for k in globalTrainCommandPosDic:
+        sum+=globalTrainCommandPosDic[k]
     print(sum)
 
     sum=0
-    for k in commandProbabilityDic:
-        sum+=commandProbabilityDic[k]
+    for k in globalTrainProbCommandDic:
+        sum+=globalTrainProbCommandDic[k]
     print(sum)
 
     sum=0
-    for k in ngram2Dic:
-        sum+=ngram2Dic[k]
+    for k in globalTrain2NGramDic:
+        sum+=globalTrain2NGramDic[k]
     print(sum)
 
     sum=0
-    for k in ngram3Dic:
-        sum+=ngram3Dic[k]
+    for k in globalTrain3NGramDic:
+        sum+=globalTrain3NGramDic[k]
     print(sum)
 
     sum=0
-    for k in ngram4Dic:
-        sum+=ngram4Dic[k]
+    for k in globalTrain4NGramDic:
+        sum+=globalTrain4NGramDic[k]
     print(sum)
 
 
 
 
+checkDics()
 
 
 print("finished")
