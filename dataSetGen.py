@@ -26,23 +26,44 @@ def createTrainSetForUser(i=0):
     segFeatVec=[]
 
     for j in range(50):
-        for k in perSegTrainCommandPosDic[j]:
-            segFeatVec.append(float(float(perSegTrainCommandPosDic[j][k])/100.0))
+        for k in globalTrainCommandPosDic:
+            if perSegTrainCommandPosDic[j].__contains__(k):
+                segFeatVec.append(float(float(perSegTrainCommandPosDic[j][k]) / (float(globalTrainCommandPosDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
 
-        for k in perSegTrainProbCommandDic[j]:
-            segFeatVec.append(float(float(perSegTrainProbCommandDic[j][k])/100.0))
+        for k in globalTrainProbCommandDic:
+            if perSegTrainProbCommandDic[j].__contains__(k):
+                segFeatVec.append(
+                    float(float(perSegTrainProbCommandDic[j][k]) / ( float(globalTrainProbCommandDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
 
-        for k in perSegTrain2NGramDic[j]:
-            segFeatVec.append(float(float(perSegTrain2NGramDic[j][k]) / 99.0))
+        for k in globalTrain2NGramDic:
+            if perSegTrain2NGramDic[j].__contains__(k):
+                segFeatVec.append(
+                    float(float(perSegTrain2NGramDic[j][k]) / (float( globalTrain2NGramDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
 
-        for k in perSegTrain3NGramDic[j]:
-            segFeatVec.append(float(float(perSegTrain3NGramDic[j][k]) / 98.0))
+        for k in globalTrain3NGramDic:
+            if perSegTrain3NGramDic[j].__contains__(k):
+                segFeatVec.append(
+                    float(float(perSegTrain3NGramDic[j][k]) / (float(globalTrain3NGramDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
 
-        for k in perSegTrain4NGramDic[j]:
-            segFeatVec.append(float(float(perSegTrain4NGramDic[j][k]) / 97.0))
+        for k in globalTrain4NGramDic:
+            if perSegTrain4NGramDic[j].__contains__(k):
+                segFeatVec.append(
+                    float(float(perSegTrain4NGramDic[j][k]) / (float(globalTrain4NGramDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
 
         perSegFeatVec.append(segFeatVec)
-        segFeatVec=[]
+        segFeatVec = []
+
+
     print ("train-set created")
     return globalFeatVec,perSegFeatVec
 
@@ -52,27 +73,68 @@ def createTestSetForUser(i=0):
     perSegFeatVec = []
     segFeatVec = []
 
+    perSegNotExistDic=[]
+    segNotExistFeatVec={}
+
     for j in range(100):
-        for k in userSegmentsDicCommands[j]:
-            segFeatVec.append(float(float(userSegmentsDicCommands[j][k]) / 100.0))
+        segNotExistFeatVec = {}
+        for k in globalTrainCommandPosDic:
+            if userSegmentsDicCommands[j].__contains__(k):
+                segFeatVec.append(float(float(userSegmentsDicCommands[j][k]) / (float(globalTrainCommandPosDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
+                if segNotExistFeatVec.__contains__(k)==False:
+                    segNotExistFeatVec[k]=1
+                else:
+                    segNotExistFeatVec[k]+=1
 
-        for k in userSegmentsDicProbabilityCommands[j]:
-            segFeatVec.append(float(float(userSegmentsDicProbabilityCommands[j][k]) / 100.0))
+        for k in globalTrainProbCommandDic:
+            if userSegmentsDicProbabilityCommands[j].__contains__(k):
+                segFeatVec.append(float(float(userSegmentsDicProbabilityCommands[j][k]) / (float(globalTrainProbCommandDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
+                if segNotExistFeatVec.__contains__(k)==False:
+                    segNotExistFeatVec[k]=1
+                else:
+                    segNotExistFeatVec[k]+=1
 
-        for k in userSegmentsDic2NGram[j]:
-            segFeatVec.append(float(float(userSegmentsDic2NGram[j][k]) / 99.0))
+        for k in globalTrain2NGramDic:
+            if userSegmentsDic2NGram[j].__contains__(k):
+                segFeatVec.append(float(float(userSegmentsDic2NGram[j][k]) / (float(globalTrain2NGramDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
+                if segNotExistFeatVec.__contains__(k)==False:
+                    segNotExistFeatVec[k]=1
+                else:
+                    segNotExistFeatVec[k]+=1
 
-        for k in userSegmentsDic3NGram[j]:
-            segFeatVec.append(float(float(userSegmentsDic3NGram[j][k]) / 98.0))
 
-        for k in userSegmentsDic4NGram[j]:
-            segFeatVec.append(float(float(userSegmentsDic4NGram[j][k]) / 97.0))
+        for k in globalTrain3NGramDic:
+            if userSegmentsDic3NGram[j].__contains__(k):
+                segFeatVec.append(float(float(userSegmentsDic3NGram[j][k]) / (float(globalTrain3NGramDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
+                if segNotExistFeatVec.__contains__(k)==False:
+                    segNotExistFeatVec[k]=1
+                else:
+                    segNotExistFeatVec[k]+=1
 
+
+        for k in globalTrain4NGramDic:
+            if userSegmentsDic4NGram[j].__contains__(k):
+                segFeatVec.append(float(float(userSegmentsDic4NGram[j][k]) / (float(globalTrain4NGramDic[k]))))
+            else:
+                segFeatVec.append(float(0.0))
+                if segNotExistFeatVec.__contains__(k)==False:
+                    segNotExistFeatVec[k]=1
+                else:
+                    segNotExistFeatVec[k]+=1
+        perSegNotExistDic.append(segNotExistFeatVec)
         perSegFeatVec.append(segFeatVec)
         segFeatVec = []
     print ("test-set created")
-    return  perSegFeatVec
+    return  perSegFeatVec,perSegNotExistDic
 
-globalFeatVec,perSegFeatVec=createTrainSetForUser()
-perSegFeatVecTest=createTestSetForUser()
+globalFeatVec,perSegFeatVecTrain=createTrainSetForUser(0)
+perSegFeatVecTest,segNotExistFeatVec=createTestSetForUser(0)
 print("finished dataset-gen")
