@@ -29,20 +29,20 @@ def trainAndExecute (i=0):
         da=dA.dA(n_visible=len(globalFeatVec),n_hidden=len(globalFeatVec)/3)
 
         print ("starting train\n")
-        for iter in range(1):
+        for iter in range(10):
             counter=0
 
             for k in range(len(perSegFeatVecTrain)):
                 print(str(da.train(input=np.array(perSegFeatVecTrain[k])))+","+str(labels[i+1][counter]))
                 counter+=1
-            avgScores=0
-            counter=0
-            for k in range(len(perSegFeatVecTrain)):
-                avgScores+=da.feedForward(input=np.array(perSegFeatVecTrain[k]))
-                nnOutput=da.feedForward(input=np.array(perSegFeatVecTrain[k]))
-                print(str(nnOutput)+","+str(labels[i+1][counter]))
-                counter+=1
-            avgScores/=len(perSegFeatVecTrain)
+        avgScores=0
+        counter=0
+        for k in range(len(perSegFeatVecTrain)):
+            avgScores+=da.feedForward(input=np.array(perSegFeatVecTrain[k]))
+            nnOutput=da.feedForward(input=np.array(perSegFeatVecTrain[k]))
+            print(str(nnOutput)+","+str(labels[i+1][counter]))
+            counter+=1
+        avgScores/=len(perSegFeatVecTrain)
 
         print ("finished train, starts test\n")
         for k in range(len(perSegFeatVecTest)):
@@ -57,4 +57,4 @@ def trainAndExecute (i=0):
         return scores
         print ("finished test\n")
 
-trainAndExecute(0)
+trainAndExecute(7)

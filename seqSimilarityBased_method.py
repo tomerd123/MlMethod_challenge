@@ -9,6 +9,7 @@ import dictionaryGen as dicGen
 import dA
 import math
 from sets import Set
+import ngramBased_method as ngram
 from difflib import SequenceMatcher
 
 def calculatePosSimilarity (s1,s2):
@@ -60,7 +61,8 @@ def calcPosSimilartyAndPosAndPyAndLevTestSegVsTrainsSegs (i=0,testSeg=0):
     simPythonScores=[]
     simLevScores=[]
     for s in trainSegs:
-        lcs=nLCS(s,testSegs[0],lcs_length(s,testSegs[0]))
+        lcsL=lcs_length(s,testSegs[0])
+        lcs=nLCS(s,testSegs[0],lcsL)
         pos=calculatePosSimilarity(s,testSegs[0])
         sm = SequenceMatcher(None, s, testSegs[0])
         pythonMatch = sm.ratio()
@@ -103,10 +105,13 @@ def calc2NGramJackardSim (s1,i=0):
 
     simScores=[]
     for seg in range(len(ngram2TrainDic)): #for each train segment
+        union=set()
+        disjunction=set()
         for k in ngram2TrainDic[seg]:
             for k2 in userSegmentsDic2NGram[int(s1)]:
                 if k==k2:
                     disjunction.add(k)
+                    union.add(k)
                 else:
                     union.add(k)
                     union.add(k2)
@@ -124,10 +129,13 @@ def calc3NGramJackardSim (s1,i=0):
 
     simScores=[]
     for seg in range(len(ngram3TrainDic)): #for each train segment
+        union=set()
+        disjunction=set()
         for k in ngram3TrainDic[seg]:
             for k2 in userSegmentsDic3NGram[int(s1)]:
                 if k==k2:
                     disjunction.add(k)
+                    union.add(k)
                 else:
                     union.add(k)
                     union.add(k2)
@@ -145,10 +153,13 @@ def calc4NGramJackardSim (s1,i=0):
 
     simScores=[]
     for seg in range(len(ngram4TrainDic)): #for each train segment
+        union=set()
+        disjunction=set()
         for k in ngram4TrainDic[seg]:
             for k2 in userSegmentsDic4NGram[int(s1)]:
                 if k==k2:
                     disjunction.add(k)
+                    union.add(k)
                 else:
                     union.add(k)
                     union.add(k2)
@@ -156,10 +167,24 @@ def calc4NGramJackardSim (s1,i=0):
         simScores.append(score)
     return np.array(simScores).mean()
 
+def calcUnknownTerms (globDic,segDic):
+    union=set()
+    intersec=set()
+    for k in globDic:
+        union.add(k)
+        if segDic.__contains__(k):
+            intersec.add(k)
+    score = float(float(len(intersec)) / float(len(union)))
+    return score
+
 
 def testUser (i=0):
-    perSegFeatVec,perSegNotExistDic=dsGen.createTestSetForUser(i)
+    globalTrainProbCommandDic = dicGen.createCommandProbabilityDic(i)
+    userSegmentsDicCommands,userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=dicGen.testUser(i)
 
+
+    perSegFeatVec,perSegNotExistDic=dsGen.createTestSetForUser(i)
+    nnScores=ngram.trainAndExecute(i)
     labels=[]
     for j2 in range(40):
         with io.open('E:/challenge/training_data/user2SegLabels.csv', 'rt', encoding="utf8") as file:
@@ -168,12 +193,31 @@ def testUser (i=0):
             for j in range(150):
                 labList.append(file.readline().split(',')[j2])
             labels.append(labList)
-
+    print("nnScore,existRatio,pos,py,lev,lcsv,ngram2,ngram3,ngram4,totalScore,knownTermsSim,maxProb,max2NGram,max3NGram,max4NGram,label")
     for j in range(100):
 
+        maxProb=0.0
+        for k in userSegmentsDicProbabilityCommands[j]:
+            if userSegmentsDicProbabilityCommands[j][k]>maxProb:
+                maxProb=userSegmentsDicProbabilityCommands[j][k]
+        maxProb/=100.0
 
-
-
+        max2NGram=0.0
+        for k in userSegmentsDic2NGram[j]:
+            if userSegmentsDic2NGram[j][k]>max2NGram:
+                max2NGram=userSegmentsDic2NGram[j][k]
+        max2NGram/=99.0
+        max3NGram = 0.0
+        for k in userSegmentsDic3NGram[j]:
+            if userSegmentsDic3NGram[j][k] > max3NGram:
+                max3NGram = userSegmentsDic3NGram[j][k]
+        max3NGram/=98.0
+        max4NGram = 0.0
+        for k in userSegmentsDic4NGram[j]:
+            if userSegmentsDic4NGram[j][k] > max4NGram:
+                max4NGram = userSegmentsDic4NGram[j][k]
+        max4NGram/=97.0
+        KnownTermsSim=float(calcUnknownTerms(globalTrainProbCommandDic,userSegmentsDicProbabilityCommands[j]))
         existRatio=float((float(len(perSegFeatVec[j]))-float(len(perSegNotExistDic[j])))/float(len(perSegFeatVec[j])))
         lcs,pos,py,lev=calcPosSimilartyAndPosAndPyAndLevTestSegVsTrainsSegs(i,j)
         lev=1.0-float(lev)/100.0
@@ -181,10 +225,17 @@ def testUser (i=0):
         ngram3=calc3NGramJackardSim(j,i)
         ngram4=calc4NGramJackardSim(j,i)
         label=labels[i+1][50+j]
-        print(str(np.array([existRatio,py,lev,lcs,pos,ngram2,ngram3,ngram4]).mean())+", existRatio is: "+str(existRatio)+", py is: "+str(py)+", lev is: "+str(lev)+", lcs is: "+str(lcs)+", ngram2 is: "+str(ngram2)+", ngram3 is: "+str(ngram3)+", ngram4 is: "+str(ngram4)+","+str(label))
+        nnScore=1.0-float(nnScores[j][0])
+        totalScore=np.array([nnScore,KnownTermsSim,py,lev,existRatio,lcs,pos,maxProb,max2NGram,max3NGram,max4NGram,ngram2,ngram3,ngram4]).mean()
+        #print(str(totalScore)+", nnScores is: "+str(nnScore)+", existRatio is: "+str(existRatio)+", pos is: "+str(pos)+", py is: "+str(py)+", lev is: "+str(lev)+", lcs is: "+str(lcs)+", ngram2 is: "+str(ngram2)+", ngram3 is: "+str(ngram3)+", ngram4 is: "+str(ngram4)+", totalScore is: "+ str(totalScore)+", KnownSim is: "+str(KnownTermsSim)+","+str(label))
+        print(
+        str(nnScore) + "," + str(existRatio) + "," + str(
+            pos) + "," + str(py) + "," + str(lev) + "," + str(lcs) + "," + str(
+            ngram2) + "," + str(ngram3) + "," + str(ngram4) + "," + str(
+            totalScore) + "," + str(KnownTermsSim) + "," +str(maxProb)+","+str(max2NGram)+","+str(max3NGram)+","+str(max4NGram)+","+ str(label))
 
 
 
-testUser(5)
+testUser(7)
 
 
