@@ -173,6 +173,7 @@ def testUser (i=0):
 
 
 
+
         existRatio=float((float(len(perSegFeatVec[j]))-float(len(perSegNotExistDic[j])))/float(len(perSegFeatVec[j])))
         lcs,pos,py,lev=calcPosSimilartyAndPosAndPyAndLevTestSegVsTrainsSegs(i,j)
         lev=1.0-float(lev)/100.0
