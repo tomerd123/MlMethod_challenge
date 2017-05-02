@@ -177,10 +177,40 @@ def calcUnknownTerms (globDic,segDic):
     score = float(float(len(intersec)) / float(len(union)))
     return score
 
+def normalizeGlobalDics(prob,n2,n3,n4, existTestDic):
 
+
+    for k in prob:
+        prob[k] /= (100.0 * 50.0)
+    for k in n2:
+        n2[k] /= (99.0 * 50.0)
+    for k in n3:
+        n3[k] /= (98.0 * 50.0)
+    for k in n4:
+        n4[k] /= (97.0 * 50.0)
+
+    for j in range(100):
+
+        for k in existTestDic[j][0]:
+            existTestDic[j][0][k]=float(math.fabs(float(prob[k])-float(existTestDic[j][0][k])))
+        for k in existTestDic[j][1]:
+            existTestDic[j][1][k]=float(math.fabs(float(n2[k])-float(existTestDic[j][1][k])))
+        for k in existTestDic[j][2]:
+            existTestDic[j][2][k]=float(math.fabs(float(n3[k])-float(existTestDic[j][2][k])))
+        for k in existTestDic[j][3]:
+            existTestDic[j][3][k]=float(math.fabs(float(n4[k])-float(existTestDic[j][3][k])))
+
+    x=1
 def testUser (i=0):
     globalTrainProbCommandDic = dicGen.createCommandProbabilityDic(i)
+    globalTrain2NGramDic = dicGen.createNGram2Dic(i)
+    globalTrain3NGramDic = dicGen.createNGram3Dic(i)
+    globalTrain4NGramDic = dicGen.createNGram4Dic(i)
+
     userSegmentsDicCommands,userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=dicGen.testUser(i)
+    userSegExistDic,userSegNoExistDic=dsGen.createTestSetForUserKnownVsUnknown(i)
+
+    normalizeGlobalDics(globalTrainProbCommandDic,globalTrain2NGramDic,globalTrain3NGramDic,globalTrain4NGramDic,userSegExistDic)
 
 
     perSegFeatVec,perSegNotExistDic=dsGen.createTestSetForUser(i)

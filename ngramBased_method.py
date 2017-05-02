@@ -57,4 +57,4 @@ def trainAndExecute (i=0):
         return scores
         print ("finished test\n")
 
-trainAndExecute(7)
+#trainAndExecute(7)
