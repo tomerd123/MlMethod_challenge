@@ -35,28 +35,32 @@ def createTrainSetForUser(i=0):
         for k in globalTrainProbCommandDic:
             if perSegTrainProbCommandDic[j].__contains__(k):
                 segFeatVec.append(
-                    float(float(perSegTrainProbCommandDic[j][k]) / ( float(globalTrainProbCommandDic[k]))))
+                    #float(float(perSegTrainProbCommandDic[j][k]) / ( float(globalTrainProbCommandDic[k]))))
+                    float(float(perSegTrainProbCommandDic[j][k]) / 1.0))
             else:
                 segFeatVec.append(float(0.0))
 
         for k in globalTrain2NGramDic:
             if perSegTrain2NGramDic[j].__contains__(k):
                 segFeatVec.append(
-                    float(float(perSegTrain2NGramDic[j][k]) / (float( globalTrain2NGramDic[k]))))
+                    #float(float(perSegTrain2NGramDic[j][k]) / (float( globalTrain2NGramDic[k]))))
+                    float(float(perSegTrain2NGramDic[j][k]) / 1.0))
             else:
                 segFeatVec.append(float(0.0))
 
         for k in globalTrain3NGramDic:
             if perSegTrain3NGramDic[j].__contains__(k):
                 segFeatVec.append(
-                    float(float(perSegTrain3NGramDic[j][k]) / (float(globalTrain3NGramDic[k]))))
+                    #float(float(perSegTrain3NGramDic[j][k]) / (float(globalTrain3NGramDic[k]))))
+                    float(float(perSegTrain3NGramDic[j][k]) / 1.0))
             else:
                 segFeatVec.append(float(0.0))
 
         for k in globalTrain4NGramDic:
             if perSegTrain4NGramDic[j].__contains__(k):
                 segFeatVec.append(
-                    float(float(perSegTrain4NGramDic[j][k]) / (float(globalTrain4NGramDic[k]))))
+                    #float(float(perSegTrain4NGramDic[j][k]) / (float(globalTrain4NGramDic[k]))))
+                    float(float(perSegTrain4NGramDic[j][k]) / 1.0))
             else:
                 segFeatVec.append(float(0.0))
 
@@ -65,6 +69,7 @@ def createTrainSetForUser(i=0):
 
 
     print ("train-set created")
+
     return globalFeatVec,perSegFeatVec
 
 def createTestSetForUser(i=0):

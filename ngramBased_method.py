@@ -44,13 +44,14 @@ def trainAndExecute (i=0):
             counter+=1
         avgScores/=len(perSegFeatVecTrain)
 
+
         print ("finished train, starts test\n")
         for k in range(len(perSegFeatVecTest)):
             notExistSum=0
             for x in segNotExistFeatVec[k]:
                 notExistSum+=segNotExistFeatVec[k][x]
             notExistRatio=float(float(notExistSum)/float(len(globalFeatVec)))
-            nnOutputDif=math.fabs(da.feedForward(input=np.array(perSegFeatVecTest[k]))-avgScores)
+            nnOutputDif=math.fabs(da.feedForward(input=np.array(perSegFeatVecTest[k])))
             print(str(nnOutputDif)+","+str(labels[i+1][counter]))
             counter+=1
             scores.append((nnOutputDif,notExistRatio))

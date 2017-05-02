@@ -6,6 +6,7 @@ import csv
 import numpy as np
 
 
+
 #train by global trainset
 def createCommandDic (i=0):
 

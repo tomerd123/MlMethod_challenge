@@ -395,6 +395,7 @@ def testUser (i=0):
             totalScore) + "," + str(KnownTermsSim) + "," +str(maxProb)+","+str(max2NGram)+","+str(max3NGram)+","+str(max4NGram)+","+str(sumProbDevExist)+","+str(sumProbNotExist)+","+ str(maxProbDevExist)+","+ str(maxProbNoExist)+","+str( avgProbExist)+","+str( avgProbNoExist)+","+str( sumN2DevExist)+","+str( sumN2NotExist)+","+str( maxN2DevExist)+","+str( maxN2NoExist)+","+str( avgN2Exist)+","+str( avgN2NoExist)+","+str( sumN3DevExist)+","+str( sumN3NotExist)+","+str( maxN3DevExist)+","+str( maxN3NoExist)+","+str( avgN3Exist)+","+str( avgN3NoExist)+","+str( sumN4DevExist)+","+str( sumN4NotExist)+","+str( maxN4DevExist)+","+str( maxN4NoExist)+","+str( avgN4Exist)+","+str( avgN4NoExist)+"," +str(label))
 
 
+
 print ("it's 9")
 testUser(9)
 print ("it's 8")
