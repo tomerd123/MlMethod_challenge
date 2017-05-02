@@ -200,7 +200,129 @@ def normalizeGlobalDics(prob,n2,n3,n4, existTestDic):
         for k in existTestDic[j][3]:
             existTestDic[j][3][k]=float(math.fabs(float(n4[k])-float(existTestDic[j][3][k])))
 
-    x=1
+def getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j):
+    sumProbDevExist = 0.0
+    sumProbNotExist = 0.0
+    maxProbDevExist = 0.0
+    maxProbNoExist = 0.0
+    avgProbExist=0.0
+    avgProbNoExist=0.0
+
+    for k in userSegExistDic[j][0]:
+        sumProbDevExist += userSegExistDic[j][0][k]
+        if userSegExistDic[j][0][k] > maxProbDevExist:
+            maxProbDevExist = userSegExistDic[j][0][k]
+    for k in userSegNoExistDic[j][0]:
+        sumProbNotExist += userSegNoExistDic[j][0][k]
+        if userSegNoExistDic[j][0][k] > maxProbNoExist:
+            maxProbNoExist = userSegNoExistDic[j][0][k]
+    lenProbExist=len(userSegExistDic[j][0])
+    lenProbNotExist=len(userSegNoExistDic[j][0])
+    if lenProbNotExist==0:
+        lenProbNotExist=np.inf
+    if lenProbExist==0:
+        lenProbExist=np.inf
+    avgProbExist=1.0-float(float(sumProbDevExist)/float(lenProbExist))
+    avgProbNoExist=1.0-float(float(sumProbNotExist)/float(lenProbNotExist))
+    maxProbDevExist = 1 - maxProbDevExist
+    maxProbNoExist = 1 - maxProbNoExist
+    sumProbDevExist = 1 - sumProbDevExist
+    sumProbNotExist = 1 - sumProbNotExist
+
+    sumN2DevExist = 0.0
+    sumN2NotExist = 0.0
+    maxN2DevExist = 0.0
+    maxN2NoExist = 0.0
+    avgN2Exist = 0.0
+    avgN2NoExist = 0.0
+
+    for k in userSegExistDic[j][1]:
+        sumN2DevExist += userSegExistDic[j][1][k]
+        if userSegExistDic[j][1][k] > maxN2DevExist:
+            maxN2DevExist = userSegExistDic[j][1][k]
+    for k in userSegNoExistDic[j][1]:
+        sumN2NotExist += userSegNoExistDic[j][1][k]
+        if userSegNoExistDic[j][1][k] > maxN2NoExist:
+            maxN2NoExist = userSegNoExistDic[j][1][k]
+
+    lenN2Exist = len(userSegExistDic[j][0])
+    lenN2NotExist = len(userSegNoExistDic[j][0])
+    if lenN2NotExist == 0:
+        lenN2NotExist = np.inf
+    if lenN2Exist == 0:
+        lenN2Exist = np.inf
+
+        
+    avgN2Exist = 1.0 - float(float(sumN2DevExist) / float(lenN2Exist))
+    avgN2NoExist = 1.0 - float(float(sumN2NotExist) / float(lenN2NotExist))
+    maxN2DevExist = 1 - maxN2DevExist
+    maxN2NoExist = 1 - maxN2NoExist
+    sumN2DevExist = 1 - sumN2DevExist
+    sumN2NotExist = 1 - sumN2NotExist
+
+    sumN3DevExist = 0.0
+    sumN3NotExist = 0.0
+    maxN3DevExist = 0.0
+    maxN3NoExist = 0.0
+    avgN3Exist = 0.0
+    avgN3NoExist = 0.0
+
+    for k in userSegExistDic[j][2]:
+        sumN3DevExist += userSegExistDic[j][2][k]
+        if userSegExistDic[j][2][k] > maxN3DevExist:
+            maxN3DevExist = userSegExistDic[j][2][k]
+    for k in userSegNoExistDic[j][2]:
+        sumN3NotExist += userSegNoExistDic[j][2][k]
+        if userSegNoExistDic[j][2][k] > maxN3NoExist:
+            maxN3NoExist = userSegNoExistDic[j][2][k]
+
+    lenN3Exist = len(userSegExistDic[j][0])
+    lenN3NotExist = len(userSegNoExistDic[j][0])
+    if lenN3NotExist == 0:
+        lenN3NotExist = np.inf
+    if lenN3Exist == 0:
+        lenN3Exist = np.inf
+        
+    avgN3Exist = 1.0 - float(float(sumN3DevExist) / float(lenN3Exist))
+    avgN3NoExist = 1.0 - float(float(sumN3NotExist) / float(lenN3NotExist))
+    maxN3DevExist = 1 - maxN3DevExist
+    maxN3NoExist = 1 - maxN3NoExist
+    sumN3DevExist = 1 - sumN3DevExist
+    sumN3NotExist = 1 - sumN3NotExist
+
+    sumN4DevExist = 0.0
+    sumN4NotExist = 0.0
+    maxN4DevExist = 0.0
+    maxN4NoExist = 0.0
+    avgN4Exist = 0.0
+    avgN4NoExist = 0.0
+
+    for k in userSegExistDic[j][3]:
+        sumN4DevExist += userSegExistDic[j][3][k]
+        if userSegExistDic[j][3][k] > maxN4DevExist:
+            maxN4DevExist = userSegExistDic[j][3][k]
+    for k in userSegNoExistDic[j][3]:
+        sumN4NotExist += userSegNoExistDic[j][3][k]
+        if userSegNoExistDic[j][3][k] > maxN4NoExist:
+            maxN4NoExist = userSegNoExistDic[j][3][k]
+
+    lenN4Exist = len(userSegExistDic[j][0])
+    lenN4NotExist = len(userSegNoExistDic[j][0])
+    if lenN4NotExist == 0:
+        lenN4NotExist = np.inf
+    if lenN4Exist == 0:
+        lenN4Exist = np.inf
+
+
+    avgN4Exist = 1.0 - float(float(sumN4DevExist) / float(lenN4Exist))
+    avgN4NoExist = 1.0 - float(float(sumN4NotExist) / float(lenN4NotExist))
+    maxN4DevExist = 1 - maxN4DevExist
+    maxN4NoExist = 1 - maxN4NoExist
+    sumN4DevExist = 1 - sumN4DevExist
+    sumN4NotExist = 1 - sumN4NotExist
+
+    return [sumProbDevExist,sumProbNotExist,maxProbDevExist,maxProbNoExist,avgProbExist,avgProbNoExist,sumN2DevExist,sumN2NotExist,maxN2DevExist,maxN2NoExist,avgN2Exist,avgN2NoExist,sumN3DevExist,sumN3NotExist,maxN3DevExist,maxN3NoExist,avgN3Exist,avgN3NoExist,sumN4DevExist,sumN4NotExist,maxN4DevExist,maxN4NoExist,avgN4Exist,avgN4NoExist]
+
 def testUser (i=0):
     globalTrainProbCommandDic = dicGen.createCommandProbabilityDic(i)
     globalTrain2NGramDic = dicGen.createNGram2Dic(i)
@@ -209,6 +331,7 @@ def testUser (i=0):
 
     userSegmentsDicCommands,userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram=dicGen.testUser(i)
     userSegExistDic,userSegNoExistDic=dsGen.createTestSetForUserKnownVsUnknown(i)
+
 
     normalizeGlobalDics(globalTrainProbCommandDic,globalTrain2NGramDic,globalTrain3NGramDic,globalTrain4NGramDic,userSegExistDic)
 
@@ -223,8 +346,10 @@ def testUser (i=0):
             for j in range(150):
                 labList.append(file.readline().split(',')[j2])
             labels.append(labList)
-    print("nnScore,existRatio,pos,py,lev,lcsv,ngram2,ngram3,ngram4,totalScore,knownTermsSim,maxProb,max2NGram,max3NGram,max4NGram,label")
+    print("nnScore,existRatio,pos,py,lev,lcsv,ngram2,ngram3,ngram4,totalScore,knownTermsSim,maxProb,max2NGram,max3NGram,max4NGram,sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist,label")
     for j in range(100):
+
+        sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist=getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j)
 
         maxProb=0.0
         for k in userSegmentsDicProbabilityCommands[j]:
@@ -256,16 +381,36 @@ def testUser (i=0):
         ngram4=calc4NGramJackardSim(j,i)
         label=labels[i+1][50+j]
         nnScore=1.0-float(nnScores[j][0])
-        totalScore=np.array([nnScore,KnownTermsSim,py,lev,existRatio,lcs,pos,maxProb,max2NGram,max3NGram,max4NGram,ngram2,ngram3,ngram4]).mean()
+        totalScore=np.array([nnScore,KnownTermsSim,py,lev,existRatio,lcs,pos,maxProb,max2NGram,max3NGram,max4NGram,ngram2,ngram3,ngram4,
+                             sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist,
+                             avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist,
+                             avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist,
+                             avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist,
+                             avgN4NoExist     ]).mean()
         #print(str(totalScore)+", nnScores is: "+str(nnScore)+", existRatio is: "+str(existRatio)+", pos is: "+str(pos)+", py is: "+str(py)+", lev is: "+str(lev)+", lcs is: "+str(lcs)+", ngram2 is: "+str(ngram2)+", ngram3 is: "+str(ngram3)+", ngram4 is: "+str(ngram4)+", totalScore is: "+ str(totalScore)+", KnownSim is: "+str(KnownTermsSim)+","+str(label))
         print(
         str(nnScore) + "," + str(existRatio) + "," + str(
             pos) + "," + str(py) + "," + str(lev) + "," + str(lcs) + "," + str(
             ngram2) + "," + str(ngram3) + "," + str(ngram4) + "," + str(
-            totalScore) + "," + str(KnownTermsSim) + "," +str(maxProb)+","+str(max2NGram)+","+str(max3NGram)+","+str(max4NGram)+","+ str(label))
+            totalScore) + "," + str(KnownTermsSim) + "," +str(maxProb)+","+str(max2NGram)+","+str(max3NGram)+","+str(max4NGram)+","+str(sumProbDevExist)+","+str(sumProbNotExist)+","+ str(maxProbDevExist)+","+ str(maxProbNoExist)+","+str( avgProbExist)+","+str( avgProbNoExist)+","+str( sumN2DevExist)+","+str( sumN2NotExist)+","+str( maxN2DevExist)+","+str( maxN2NoExist)+","+str( avgN2Exist)+","+str( avgN2NoExist)+","+str( sumN3DevExist)+","+str( sumN3NotExist)+","+str( maxN3DevExist)+","+str( maxN3NoExist)+","+str( avgN3Exist)+","+str( avgN3NoExist)+","+str( sumN4DevExist)+","+str( sumN4NotExist)+","+str( maxN4DevExist)+","+str( maxN4NoExist)+","+str( avgN4Exist)+","+str( avgN4NoExist)+"," +str(label))
+
+
+print ("it's 9")
+testUser(9)
+print ("it's 8")
+
+testUser(8)
+print ("it's 6")
+
+testUser(6)
+print ("it's 4")
+
+testUser(4)
 
 
 
-testUser(7)
+
+
+
 
 
