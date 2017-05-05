@@ -8,6 +8,8 @@ import dataSetGen as dsGen
 import dA
 import math
 import random
+from statistics import mean
+
 
 def find_ngrams(input_list, n=50):
   return zip(*[input_list[i:] for i in range(n)])
@@ -60,6 +62,7 @@ def createTrainCorpus (i=0,maxN=50):
         ngramsTrain=createTrainSetWithHighNGrams(i,maxN)
 
         for seg in ngramsTrain:
+
             nDic=createNGramDistDic(seg,maxN)
             for ng in nDic:
                 checkTerms={}
@@ -112,7 +115,11 @@ def TestUser(i=0,maxN=50):
 
     #calc tf-idf for test-seg
     tfIDFDic={}
-    for seg in testSegs:
+
+    print("j" + "," + "maxNotExistFreqForTerm" + "," + "sumNotExistHighNGram" + "," + "cosim"+","+"avgTestTfIDF")
+
+    for j,seg in enumerate(testSegs):
+        termsNotExistDic={}
         tfIDFDic = {}
         mergedTestSegDic,maxTermFreq=mergeTestSegNGram(createNGramDistDic(seg,maxN))
         for t in mergedTestSegDic:
@@ -129,18 +136,26 @@ def TestUser(i=0,maxN=50):
         for t1 in trainCorpus:
             sumCorpus+=trainCorpusTfIDF[t1]**2
         sumCorpus=math.sqrt(sumCorpus)
-
+        sumNotExistHighNGram=0.0
+        maxNotExistFreqForTerm=0.0
         for t2 in tfIDFDic:
             sumTestSeg+=tfIDFDic[t2]**2
             #find intersect
             if trainCorpus.__contains__(t2):
                 intersect.add(t2)
+            else:
+                termsNotExistDic[t2]=mergedTestSegDic[t2]
+                sumNotExistHighNGram+=mergedTestSegDic[t2]*len(t2)*len(t2)
+                maxNotExistFreqForTerm=max(maxNotExistFreqForTerm,mergedTestSegDic[t2]*len(t2))
         sumTestSeg=math.sqrt(sumTestSeg)
 
         for t in intersect:
             sumIntersect+=float(trainCorpusTfIDF[t])*float(tfIDFDic[t])
-
+        items=tfIDFDic.items()
+        avgTestTfIDF=mean([x[1] for x in tfIDFDic.items()])
         cosim=float(sumIntersect)/(sumCorpus*sumTestSeg)
+
+        print(str(j)+","+str(maxNotExistFreqForTerm)+","+str(sumNotExistHighNGram)+","+str(cosim)+","+str(avgTestTfIDF))
 
         cosimList.append(cosim)
 
@@ -148,7 +163,7 @@ def TestUser(i=0,maxN=50):
 
 
 
-cosimList=TestUser(7,3)
+cosimList=TestUser(7,15)
 
 
 print("finished")
