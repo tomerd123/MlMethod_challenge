@@ -100,7 +100,6 @@ def createTestSetWithHighNGrams(i=0, maxN=50):
 
 
 def TestUser(i=0,maxN=50):
-    cosimList=[]
     testSegs=createTestSetWithHighNGrams(i,maxN)
     trainCorpus,maxFreqCorp=createTrainCorpus(i,maxN)
 
@@ -111,13 +110,16 @@ def TestUser(i=0,maxN=50):
             docsAppear = trainCorpus[t][1]
         else:
             docsAppear = 0.0
-        trainCorpusTfIDF[t]=(0.5+0.5*float(trainCorpus[t][0])/float(maxFreqCorp))*math.log(50.0/(float(docsAppear)+1))
+        trainCorpusTfIDF[t]=(0.5+0.5*float(trainCorpus[t][0])/float(maxFreqCorp))*math.log(50.0/(float(docsAppear)+0.01))
 
     #calc tf-idf for test-seg
     tfIDFDic={}
 
     print("j" + "," + "maxNotExistFreqForTerm" + "," + "sumNotExistHighNGram" + "," + "cosim"+","+"avgTestTfIDF")
-
+    maxNotExistFreqForTermList=[]
+    sumNotExistHighNGramList=[]
+    cosimList=[]
+    avgTestTfIDFList=[]
     for j,seg in enumerate(testSegs):
         termsNotExistDic={}
         tfIDFDic = {}
@@ -127,7 +129,7 @@ def TestUser(i=0,maxN=50):
                 docsAppear=trainCorpus[t][1]
             else:
                 docsAppear=0.0
-            tfIDFDic[t]=(0.5+0.5*float(mergedTestSegDic[t])/float(maxTermFreq))*math.log(50.0/(float(docsAppear)+1))
+            tfIDFDic[t]=(0.5+0.5*float(mergedTestSegDic[t])/float(maxTermFreq))*math.log(50.0/(float(docsAppear)+0.01))
 
         intersect=set()
         sumCorpus=0.0
@@ -156,14 +158,29 @@ def TestUser(i=0,maxN=50):
         cosim=float(sumIntersect)/(sumCorpus*sumTestSeg)
 
         print(str(j)+","+str(maxNotExistFreqForTerm)+","+str(sumNotExistHighNGram)+","+str(cosim)+","+str(avgTestTfIDF))
-
+        maxNotExistFreqForTermList.append(maxNotExistFreqForTerm)
+        sumNotExistHighNGramList.append(sumNotExistHighNGram)
         cosimList.append(cosim)
+        avgTestTfIDFList.append(avgTestTfIDF)
 
-    return cosimList
+    #min-max normalization sumNotExistHighNGramList
+    minSum=min(sumNotExistHighNGramList)
+    maxSum=max(sumNotExistHighNGramList)
+    for s in range(len(sumNotExistHighNGramList)):
+        sumNotExistHighNGramList[s]=float(float(sumNotExistHighNGramList[s]-minSum)/float(maxSum-minSum))
+        sumNotExistHighNGramList[s]=1.0-sumNotExistHighNGramList[s]
+    #std-mean norm for avgTestTfIDFList
+    TfIDFMeanNotNormalizedList=[]
+    avgTfIDFList=np.array(avgTestTfIDFList).mean()
+    for a in range(len(avgTestTfIDFList)):
+        TfIDFMeanNotNormalizedList.append(1.0-avgTestTfIDFList[a])
+        avgTestTfIDFList[a]=1.0-math.fabs(avgTestTfIDFList[a]-avgTfIDFList)
+
+    return maxNotExistFreqForTermList,sumNotExistHighNGramList,cosimList,avgTestTfIDFList,TfIDFMeanNotNormalizedList
 
 
 
-cosimList=TestUser(7,15)
+maxNotExistFreqForTermList,sumNotExistHighNGramList,cosimList,avgTestTfIDFList,TfIDFMeanNotNormalizedList=TestUser(5,2)
 
 
-print("finished")
+print("finished high NGram")

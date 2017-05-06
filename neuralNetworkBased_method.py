@@ -31,8 +31,8 @@ def trainAndExecute (i=0,ngramStop=2):
 
         da=dA.dA(n_visible=len(perSegFeatVecProb[0]),n_hidden=len(perSegFeatVecProb[0])/3)
 
-        print ("starting train\n")
-        for iter in range(1):
+        #print ("starting train\n")
+        for iter in range(15):
             counter=0
 
             for k in range(len(perSegFeatVecProb)):
@@ -41,7 +41,7 @@ def trainAndExecute (i=0,ngramStop=2):
 
         counter=0
 
-        print ("finished train, starts test\n")
+        #print ("finished train, starts test\n")
 
 
         for k in range(len(userSegFeatVecProb)):
@@ -51,12 +51,11 @@ def trainAndExecute (i=0,ngramStop=2):
             counter+=1
         #train and test N2
 
-        if len(perSegFeatVecN2[0])==0:
-            print("dfdsfs")
+
         da = dA.dA(n_visible=len(perSegFeatVecN2[0]), n_hidden=len(perSegFeatVecN2[0]) / 3)
 
-        print ("starting train\n")
-        for iter in range(1):
+        #print ("starting train\n")
+        for iter in range(15):
             counter = 0
 
             for k in range(len(perSegFeatVecN2)):
@@ -66,19 +65,18 @@ def trainAndExecute (i=0,ngramStop=2):
         counter = 0
 
 
-        print ("finished train, starts test\n")
+        #print ("finished train, starts test\n")
 
         for k in range(len(userSegFeatVecN2)):
             nnOutputN2 = da.feedForward(input=np.array(userSegFeatVecN2[k]))
             scoresN2.append(nnOutputN2)
             counter += 1
         #train and test N3
-        if len(perSegFeatVecN3[0])==0:
-            print("dfdsfs")
+
         da = dA.dA(n_visible=len(perSegFeatVecN3[0]), n_hidden=len(perSegFeatVecN3[0]) / 3)
 
-        print ("starting train\n")
-        for iter in range(1):
+        #print ("starting train\n")
+        for iter in range(15):
             counter = 0
 
             for k in range(len(perSegFeatVecN3)):
@@ -88,7 +86,7 @@ def trainAndExecute (i=0,ngramStop=2):
         counter = 0
 
 
-        print ("finished train, starts test\n")
+        #print ("finished train, starts test\n")
 
         for k in range(len(userSegFeatVecN3)):
             nnOutputN3 = da.feedForward(input=np.array(userSegFeatVecN3[k]))
@@ -96,12 +94,11 @@ def trainAndExecute (i=0,ngramStop=2):
             counter += 1
 
         #train and test N4
-        if len(perSegFeatVecN4[0])==0:
-            print("dfdsfs")
+
         da = dA.dA(n_visible=len(perSegFeatVecN4[0]), n_hidden=len(perSegFeatVecN4[0]) / 3)
 
-        print ("starting train\n")
-        for iter in range(1):
+        #print ("starting train\n")
+        for iter in range(15):
             counter = 0
 
             for k in range(len(perSegFeatVecN4)):
@@ -112,13 +109,34 @@ def trainAndExecute (i=0,ngramStop=2):
 
 
 
-        print ("finished train, starts test\n")
+        #print ("finished train, starts test\n")
 
         for k in range(len(userSegFeatVecN4)):
             nnOutputN4 = da.feedForward(input=np.array(userSegFeatVecN4[k]))
             counter += 1
             scoresN4.append(nnOutputN4)
-        print ("finished test\n")
+        #print ("finished test\n")
+
+        avgS = np.array(scoresProb).mean()
+        #normalize mean-std prob
+        for s in range(len(scoresProb)):
+            scoresProb[s]=math.fabs(avgS-scoresProb[s])
+
+        # normalize mean-std n2
+        avgS = np.array(scoresN2).mean()
+        for s in range(len(scoresN2)):
+            scoresN2[s] = math.fabs(avgS - scoresN2[s])
+
+        # normalize mean-std n3
+        avgS = np.array(scoresN3).mean()
+        for s in range(len(scoresN3)):
+            scoresN3[s] = math.fabs(avgS - scoresN3[s])
+
+        # normalize mean-std n4
+        avgS = np.array(scoresN4).mean()
+        for s in range(len(scoresN4)):
+            scoresN4[s] = math.fabs(avgS - scoresN4[s])
+
         return scoresProb,scoresN2,scoresN3,scoresN4
 
 #trainAndExecute(7,4)

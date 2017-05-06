@@ -85,7 +85,7 @@ def createTrainSetForUser(i=0,ngramStop=2):
         segFeatVecN4 = []
 
 
-    print ("train-set created")
+    #print ("train-set created")
 
     return globalFeatVecProb,globalFeatVecN2,globalFeatVecN3,globalFeatVecN4,perSegFeatVecProb,perSegFeatVecN2,perSegFeatVecN3,perSegFeatVecN4
 
@@ -180,7 +180,7 @@ def createTestSetForUser(i=0,ngramStop=2):
         segFeatVecN2=[]
         segFeatVecN3=[]
         segFeatVecN4=[]
-    print ("test-set created")
+    #print ("test-set created")
     return  perSegFeatVecProb,perSegNotExistDicProb,perSegFeatVecN2,perSegNotExistDicN2,perSegFeatVecN3,perSegNotExistDicN3,perSegFeatVecN4,perSegNotExistDicN4
 
 def createTestSetForUserKnownVsUnknown (i=0,ngramStop=2):
@@ -295,7 +295,7 @@ def createTestSetForUserKnownVsUnknown (i=0,ngramStop=2):
             perSegExistDist[j].append(exist4NGramDistDic)
             perSegNoExistDist[j].append(noExist4NGramDistDic)
 
-    print ("test-set exist/no-exist dist dics were created")
+    #print ("test-set exist/no-exist dist dics were created")
     return perSegExistDist,perSegNoExistDist
 
 #globalFeatVec,perSegFeatVecTrain=createTrainSetForUser(0)

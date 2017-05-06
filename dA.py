@@ -96,7 +96,7 @@ class dA(object):
 
         return cross_entropy
 
-    def feedForward(self,  lr=0.1, corruption_level=0.3, input=None):
+    def feedForward(self,  lr=0.1, corruption_level=0.1, input=None):
         if input is not None:
             self.x = input
 

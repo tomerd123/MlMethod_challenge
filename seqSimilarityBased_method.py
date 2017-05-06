@@ -11,6 +11,7 @@ import math
 from sets import Set
 import neuralNetworkBased_method as ngram
 from difflib import SequenceMatcher
+import highNGramAnalyzer as hn
 
 def calculatePosSimilarity (s1,s2):
     count=0
@@ -246,11 +247,11 @@ def getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j,ngram
             lenProbNotExist=np.inf
         if lenProbExist==0:
             lenProbExist=np.inf
-        avgProbExist=1.0-float(float(sumProbDevExist)/float(lenProbExist))
+        avgProbExist=float(float(sumProbDevExist)/float(lenProbExist))
         avgProbNoExist=1.0-float(float(sumProbNotExist)/float(lenProbNotExist))
-        maxProbDevExist = 1 - maxProbDevExist
+        maxProbDevExist =  maxProbDevExist
         maxProbNoExist = 1 - maxProbNoExist
-        sumProbDevExist = 1 - sumProbDevExist
+        sumProbDevExist =  sumProbDevExist
         sumProbNotExist = 1 - sumProbNotExist
     if ngramStop>=2:
 
@@ -272,11 +273,11 @@ def getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j,ngram
             lenN2Exist = np.inf
 
 
-        avgN2Exist = 1.0 - float(float(sumN2DevExist) / float(lenN2Exist))
+        avgN2Exist =  float(float(sumN2DevExist) / float(lenN2Exist))
         avgN2NoExist = 1.0 - float(float(sumN2NotExist) / float(lenN2NotExist))
-        maxN2DevExist = 1 - maxN2DevExist
+        maxN2DevExist =  maxN2DevExist
         maxN2NoExist = 1 - maxN2NoExist
-        sumN2DevExist = 1 - sumN2DevExist
+        sumN2DevExist =  sumN2DevExist
         sumN2NotExist = 1 - sumN2NotExist
     if ngramStop>=3:
 
@@ -296,11 +297,11 @@ def getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j,ngram
         if lenN3Exist == 0:
             lenN3Exist = np.inf
 
-        avgN3Exist = 1.0 - float(float(sumN3DevExist) / float(lenN3Exist))
+        avgN3Exist =  float(float(sumN3DevExist) / float(lenN3Exist))
         avgN3NoExist = 1.0 - float(float(sumN3NotExist) / float(lenN3NotExist))
-        maxN3DevExist = 1 - maxN3DevExist
+        maxN3DevExist =  maxN3DevExist
         maxN3NoExist = 1 - maxN3NoExist
-        sumN3DevExist = 1 - sumN3DevExist
+        sumN3DevExist =  sumN3DevExist
         sumN3NotExist = 1 - sumN3NotExist
     if ngramStop>=4:
 
@@ -321,11 +322,11 @@ def getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j,ngram
             lenN4Exist = np.inf
 
 
-        avgN4Exist = 1.0 - float(float(sumN4DevExist) / float(lenN4Exist))
+        avgN4Exist =  float(float(sumN4DevExist) / float(lenN4Exist))
         avgN4NoExist = 1.0 - float(float(sumN4NotExist) / float(lenN4NotExist))
-        maxN4DevExist = 1 - maxN4DevExist
+        maxN4DevExist =  maxN4DevExist
         maxN4NoExist = 1 - maxN4NoExist
-        sumN4DevExist = 1 - sumN4DevExist
+        sumN4DevExist =  sumN4DevExist
         sumN4NotExist = 1 - sumN4NotExist
 
     return [sumProbDevExist,sumProbNotExist,maxProbDevExist,maxProbNoExist,avgProbExist,avgProbNoExist,sumN2DevExist,sumN2NotExist,maxN2DevExist,maxN2NoExist,avgN2Exist,avgN2NoExist,sumN3DevExist,sumN3NotExist,maxN3DevExist,maxN3NoExist,avgN3Exist,avgN3NoExist,sumN4DevExist,sumN4NotExist,maxN4DevExist,maxN4NoExist,avgN4Exist,avgN4NoExist]
@@ -342,11 +343,13 @@ def calcMaxProb (userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSe
         if userSegmentsDic2NGram[j][k] > max2NGram:
             max2NGram = userSegmentsDic2NGram[j][k]
     max2NGram /= 99.0
+
     max3NGram = 0.0
     for k in userSegmentsDic3NGram[j]:
         if userSegmentsDic3NGram[j][k] > max3NGram:
             max3NGram = userSegmentsDic3NGram[j][k]
     max3NGram /= 98.0
+
     max4NGram = 0.0
     for k in userSegmentsDic4NGram[j]:
         if userSegmentsDic4NGram[j][k] > max4NGram:
@@ -377,69 +380,230 @@ def testUser (i=0,ngramStop=2):
             for j in range(150):
                 labList.append(file.readline().split(',')[j2])
             labels.append(labList)
-    print("nnScoreProb,nnScoreN2,nnScoreN3,nnScoreN4,existRatio,pos,py,lev,lcsv,ngram2,ngram3,ngram4,totalScore,knownTermsSim,maxProb,max2NGram,max3NGram,max4NGram,sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist,label")
-    for j in range(100):
+    print("nnScoreProb,nnScoreN2,nnScoreN3,nnScoreN4,existRatio,pos,py,lev,lcsv,ngram2,ngram3,ngram4,totalScore,knownTermsSim,maxProb,max2NGram,max3NGram,max4NGram,sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist,sumNotExistHighNGramList5,cosimList5,avgTestTfIDFList5,TfIDFMeanNotNormalizedList5,sumNotExistHighNGramList15,cosimList15,avgTestTfIDFList15,TfIDFMeanNotNormalizedList15,label")
 
-        sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist=getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j,ngramStop)
-        maxProb,max2NGram,max3NGram,max4NGram=calcMaxProb(userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram,j,ngramStop)
-        KnownTermsSim=float(calcUnknownTerms(globalTrainProbCommandDic,userSegmentsDicProbabilityCommands[j]))
-        existRatio=float((float(len(userSegExistDic[j][0])+len(userSegExistDic[j][1])+len(userSegExistDic[j][2])+len(userSegExistDic[j][3]))-float(len(userSegNoExistDic[j][0])+len(userSegNoExistDic[j][1])+len(userSegNoExistDic[j][2])+len(userSegNoExistDic[j][3])))/float(len(userSegExistDic[j][0])+len(userSegExistDic[j][1])+len(userSegExistDic[j][2])+len(userSegExistDic[j][3])))
-        lcs,pos,py,lev=calcPosSimilartyAndPosAndPyAndLevTestSegVsTrainsSegs(i,j)
-        lev=1.0-float(lev)/100.0
-        ngram2=calc2NGramJackardSim(j,i)
-        ngram3=calc3NGramJackardSim(j,i)
-        ngram4=calc4NGramJackardSim(j,i)
-        label=labels[i+1][50+j]
-        nnScoreProb=1.0-float(nnScoresProb[j])
-        nnScoreN2=1.0-float(nnScoresN2[j])
-        nnScoreN3=1.0-float(nnScoresN3[j])
-        nnScoreN4=1.0-float(nnScoresN4[j])
-        totalScore=np.array([nnScoreProb,nnScoreN2,nnScoreN3,nnScoreN4,KnownTermsSim,py,lev,existRatio,lcs,pos,maxProb,max2NGram,max3NGram,max4NGram,ngram2,ngram3,ngram4,
-                             sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist,
-                             avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist,
-                             avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist,
-                             avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist,
-                             avgN4NoExist     ]).mean()
-        #print(str(totalScore)+", nnScores is: "+str(nnScore)+", existRatio is: "+str(existRatio)+", pos is: "+str(pos)+", py is: "+str(py)+", lev is: "+str(lev)+", lcs is: "+str(lcs)+", ngram2 is: "+str(ngram2)+", ngram3 is: "+str(ngram3)+", ngram4 is: "+str(ngram4)+", totalScore is: "+ str(totalScore)+", KnownSim is: "+str(KnownTermsSim)+","+str(label))
-        print(
-        str(nnScoreProb)+ "," + str(nnScoreN2)+ "," + str(nnScoreN3)+ "," + str(nnScoreN4) + "," + str(existRatio) + "," + str(
-            pos) + "," + str(py) + "," + str(lev) + "," + str(lcs) + "," + str(
-            ngram2) + "," + str(ngram3) + "," + str(ngram4) + "," + str(
-            totalScore) + "," + str(KnownTermsSim) + "," +str(maxProb)+","+str(max2NGram)+","+str(max3NGram)+","+str(max4NGram)+","+str(sumProbDevExist)+","+str(sumProbNotExist)+","+ str(maxProbDevExist)+","+ str(maxProbNoExist)+","+str( avgProbExist)+","+str( avgProbNoExist)+","+str( sumN2DevExist)+","+str( sumN2NotExist)+","+str( maxN2DevExist)+","+str( maxN2NoExist)+","+str( avgN2Exist)+","+str( avgN2NoExist)+","+str( sumN3DevExist)+","+str( sumN3NotExist)+","+str( maxN3DevExist)+","+str( maxN3NoExist)+","+str( avgN3Exist)+","+str( avgN3NoExist)+","+str( sumN4DevExist)+","+str( sumN4NotExist)+","+str( maxN4DevExist)+","+str( maxN4NoExist)+","+str( avgN4Exist)+","+str( avgN4NoExist)+"," +str(label))
+    with io.open('E:/challenge/tfIdfCheck/ds'+str(i)+'.csv', 'wt', encoding="utf8") as file1:
+        file1.write(unicode("nnScoreProb,nnScoreN2,nnScoreN3,nnScoreN4,existRatio,pos,py,lev,lcsv,ngram2,ngram3,ngram4,totalScore,knownTermsSim,maxProb,max2NGram,max3NGram,max4NGram,sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist,sumNotExistHighNGramList5,cosimList5,avgTestTfIDFList5,TfIDFMeanNotNormalizedList5,sumNotExistHighNGramList15,cosimList15,avgTestTfIDFList15,TfIDFMeanNotNormalizedList15,label\n"))
+        maxNotExistFreqForTermList5, sumNotExistHighNGramList5, cosimList5, avgTestTfIDFList5,TfIDFMeanNotNormalizedList5 = hn.TestUser(i, 2)
+        maxNotExistFreqForTermList15, sumNotExistHighNGramList15, cosimList15, avgTestTfIDFList15,TfIDFMeanNotNormalizedList15 = hn.TestUser(i, 5)
+        for j in range(100):
 
+            sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist=getMaxAndSumAndAvgExistAndNotExist(userSegExistDic,userSegNoExistDic,j,ngramStop)
+            maxProb,max2NGram,max3NGram,max4NGram=calcMaxProb(userSegmentsDicProbabilityCommands,userSegmentsDic2NGram,userSegmentsDic3NGram,userSegmentsDic4NGram,j,ngramStop)
+            #considering only term-probs
+            KnownTermsSim=float(calcUnknownTerms(globalTrainProbCommandDic,userSegmentsDicProbabilityCommands[j]))
+            #considering n-grams
+            existRatio=float((float(len(userSegExistDic[j][0])+len(userSegExistDic[j][1])+len(userSegExistDic[j][2])+len(userSegExistDic[j][3]))-float(len(userSegNoExistDic[j][0])+len(userSegNoExistDic[j][1])+len(userSegNoExistDic[j][2])+len(userSegNoExistDic[j][3])))/float(1+len(userSegExistDic[j][0])+len(userSegExistDic[j][1])+len(userSegExistDic[j][2])+len(userSegExistDic[j][3])))
+            lcs,pos,py,lev=calcPosSimilartyAndPosAndPyAndLevTestSegVsTrainsSegs(i,j)
+            lev=1.0-float(lev)/100.0
+            ngram2=calc2NGramJackardSim(j,i)
+            ngram3=calc3NGramJackardSim(j,i)
+            ngram4=calc4NGramJackardSim(j,i)
+            label=labels[i+1][50+j]
+            nnScoreProb=1.0-float(nnScoresProb[j])
+            nnScoreN2=1.0-float(nnScoresN2[j])
+            nnScoreN3=1.0-float(nnScoresN3[j])
+            nnScoreN4=1.0-float(nnScoresN4[j])
+
+
+
+            #features weights
+
+            wngram2= 0.143*0+1*ngram2
+
+
+            wsumProbNotExist= 0.1354*0+1*sumProbNotExist
+
+
+            wnnScoreProb=  0.1288*0+1*nnScoreProb
+            wsumN2NotExist=          0.126*0+1*sumN2NotExist
+
+            wavgN4NoExist=0.125*0+1*avgN4NoExist
+            wavgN3NoExist=0.1242*0+1*avgN3NoExist
+            wlcs=0.1238*0+1*lcs
+            wlev=0.1151*0+1*lev
+
+
+            wavgN2NoExist=        0.1083*0+1*avgN2NoExist
+
+
+            wpy=        0.1018*0+1*py
+
+
+            wavgTestTfIDFList5=        0.1002*0+1*avgTestTfIDFList5[j]
+
+
+            wnnScoreN2=        0.0969*0+1*avgProbNoExist
+
+
+            wavgProbNoExist=        0.0956*0+1*avgProbNoExist
+
+
+            wmaxProbNoExist=        0.0956*0+1*maxProbNoExist
+
+
+            wngram3=        0.0923*0+1*ngram3
+
+
+            wngram4=        0.089*0+1*ngram4
+
+
+            wsumNotExistHighNGramList5=        0.089*0+1*sumNotExistHighNGramList5[j]
+
+
+            wexistRatio=        0.0884*0+1*existRatio
+
+
+            wpos=        0.0868*0+1*pos
+
+
+            wmaxN3DevExist=        0.0865*0+1*maxN3DevExist
+
+
+            wsumProbDevExist=        0.0859*0+1*sumProbDevExist
+
+
+            wsumN3NotExist=        0.0817*0+1*sumN3NotExist
+
+
+            wmaxN4DevExist=        0.0805*0+1*maxN4DevExist
+
+            wsumNotExistHighNGramList15=        0.0802*0+1*sumNotExistHighNGramList15[j]
+
+
+            wTfIDFMeanNotNormalizedList15=        0.0776*0+1*TfIDFMeanNotNormalizedList15[j]
+
+
+            wmaxN2DevExist=        0.0747*0+1*maxN2DevExist
+
+
+            wavgN2Exist=        0.073*0+1*avgN2Exist
+
+
+            wTfIDFMeanNotNormalizedList5=        0.0721*0+1*TfIDFMeanNotNormalizedList5[j]
+
+
+            wsumN4NotExist=        0.0627*0+1*sumN4NotExist
+
+
+            wavgN3Exist=        0.0581*0+1*avgN3Exist
+
+
+            wavgN4Exist=        0.0566*0+1*avgN4Exist
+
+
+            wsumN2DevExist=        0.054*0+1*sumN2DevExist
+
+
+            wavgProbExist=        0.0532*0+1*avgProbNoExist
+
+
+            wcosimList15=        0.0514*0+1*cosimList15[j]
+
+
+            wsumN3DevExist=        0.0509*0+1*sumN3DevExist
+
+
+            wcosimList5=        0.0472*0+1*cosimList5[j]
+
+
+            wsumN4DevExist=        0.0432*0+1*sumN4DevExist
+
+
+            wmaxN3NoExist=        0.0388*0+1*maxN3NoExist
+
+
+
+            wmaxProbDevExist=        0.0385*0+1*maxProbDevExist
+
+
+            wmaxN2NoExist=        0.0363*0+1*maxN2NoExist
+
+
+            wmaxN4NoExist=        0.0359*0+1*maxN4NoExist
+
+
+            wavgTestTfIDFList15=        0.0349*0+1*avgTestTfIDFList15[j]
+
+
+            wmax3NGram=        0.0328*0+1*max3NGram
+
+
+            wmaxProb=0.0319*0+1*maxProb
+
+
+            wmax4NGram= 0.0316*0+1*max4NGram
+
+
+            wmax2NGram=0.0296*0+1*max2NGram
+
+
+            wKnownTermsSim=0.0243*0+1*KnownTermsSim
+
+
+            wnnScoreN3= 0.0139*0+1*nnScoreN3
+
+            wnnScoreN4=0*0+1*nnScoreN4
+
+
+            totalScore=np.array([wnnScoreProb,wnnScoreN2,wnnScoreN3,wnnScoreN4,wKnownTermsSim,wpy,wlev,wexistRatio,wlcs,wpos,wmaxProb,wmax2NGram,wmax3NGram,wmax4NGram,wngram2,wngram3,wngram4,
+                                 wsumProbDevExist, wsumProbNotExist, wmaxProbDevExist, wmaxProbNoExist, wavgProbExist,
+                                 wavgProbNoExist, wsumN2DevExist, wsumN2NotExist, wmaxN2DevExist, wmaxN2NoExist, wavgN2Exist,
+                                 wavgN2NoExist, wsumN3DevExist, wsumN3NotExist, wmaxN3DevExist, wmaxN3NoExist, wavgN3Exist,
+                                 wavgN3NoExist, wsumN4DevExist, wsumN4NotExist, wmaxN4DevExist, wmaxN4NoExist, wavgN4Exist,
+                                 wavgN4NoExist,wsumNotExistHighNGramList5,wcosimList5,wavgTestTfIDFList5,wTfIDFMeanNotNormalizedList5,wsumNotExistHighNGramList15,wcosimList15,wavgTestTfIDFList15,wTfIDFMeanNotNormalizedList15     ]).mean()
+            wtotalScore=totalScore
+            file1.write(unicode(str(wnnScoreProb)+ "," + str(wnnScoreN2)+ "," + str(wnnScoreN3)+ "," + str(wnnScoreN4) + "," + str(wexistRatio) + "," + str(
+                wpos) + "," + str(wpy) + "," + str(wlev) + "," + str(wlcs) + "," + str(
+                wngram2) + "," + str(wngram3) + "," + str(wngram4) + "," + str(
+               wtotalScore) + "," + str(wKnownTermsSim) + "," +str(wmaxProb)+","+str(wmax2NGram)+","+str(wmax3NGram)+","+str(wmax4NGram)+","+str(wsumProbDevExist)+","+str(wsumProbNotExist)+","+ str(wmaxProbDevExist)+","+ str(wmaxProbNoExist)+","+str( wavgProbExist)+","+str( wavgProbNoExist)+","+str( wsumN2DevExist)+","+str( wsumN2NotExist)+","+str( wmaxN2DevExist)+","+str( wmaxN2NoExist)+","+str( wavgN2Exist)+","+str( wavgN2NoExist)+","+str( wsumN3DevExist)+","+str( wsumN3NotExist)+","+str( wmaxN3DevExist)+","+str( wmaxN3NoExist)+","+str( wavgN3Exist)+","+str( wavgN3NoExist)+","+str( wsumN4DevExist)+","+str( wsumN4NotExist)+","+str( wmaxN4DevExist)+","+str( wmaxN4NoExist)+","+str( wavgN4Exist)+","+str( wavgN4NoExist)+","+str(wsumNotExistHighNGramList5)+","+str(wcosimList5)+","+str(wavgTestTfIDFList5)+","+str(wTfIDFMeanNotNormalizedList5)+","+str(wsumNotExistHighNGramList15)+","+str(wcosimList15)+","+str(wavgTestTfIDFList15)+","+str(wTfIDFMeanNotNormalizedList15)+"," +str(label)+"\n"))
+            print(
+            str(wnnScoreProb)+ "," + str(wnnScoreN2)+ "," + str(wnnScoreN3)+ "," + str(wnnScoreN4) + "," + str(wexistRatio) + "," + str(
+                wpos) + "," + str(wpy) + "," + str(wlev) + "," + str(wlcs) + "," + str(
+                wngram2) + "," + str(wngram3) + "," + str(wngram4) + "," + str(
+               wtotalScore) + "," + str(wKnownTermsSim) + "," +str(wmaxProb)+","+str(wmax2NGram)+","+str(wmax3NGram)+","+str(wmax4NGram)+","+str(wsumProbDevExist)+","+str(wsumProbNotExist)+","+ str(wmaxProbDevExist)+","+ str(wmaxProbNoExist)+","+str( wavgProbExist)+","+str( wavgProbNoExist)+","+str( wsumN2DevExist)+","+str( wsumN2NotExist)+","+str( wmaxN2DevExist)+","+str( wmaxN2NoExist)+","+str( wavgN2Exist)+","+str( wavgN2NoExist)+","+str( wsumN3DevExist)+","+str( wsumN3NotExist)+","+str( wmaxN3DevExist)+","+str( wmaxN3NoExist)+","+str( wavgN3Exist)+","+str( wavgN3NoExist)+","+str( wsumN4DevExist)+","+str( wsumN4NotExist)+","+str( wmaxN4DevExist)+","+str( wmaxN4NoExist)+","+str( wavgN4Exist)+","+str( wavgN4NoExist)+","+str(wsumNotExistHighNGramList5)+","+str(wcosimList5)+","+str(wavgTestTfIDFList5)+","+str(wTfIDFMeanNotNormalizedList5)+","+str(wsumNotExistHighNGramList15)+","+str(wcosimList15)+","+str(wavgTestTfIDFList15)+","+str(wTfIDFMeanNotNormalizedList15)+"," +str(label))
+
+
+
+print("nnScoreProb,nnScoreN2,nnScoreN3,nnScoreN4,existRatio,pos,py,lev,lcsv,ngram2,ngram3,ngram4,totalScore,knownTermsSim,maxProb,max2NGram,max3NGram,max4NGram,sumProbDevExist, sumProbNotExist, maxProbDevExist, maxProbNoExist, avgProbExist, avgProbNoExist, sumN2DevExist, sumN2NotExist, maxN2DevExist, maxN2NoExist, avgN2Exist, avgN2NoExist, sumN3DevExist, sumN3NotExist, maxN3DevExist, maxN3NoExist, avgN3Exist, avgN3NoExist, sumN4DevExist, sumN4NotExist, maxN4DevExist, maxN4NoExist, avgN4Exist, avgN4NoExist,sumNotExistHighNGramList5,cosimList5,avgTestTfIDFList5,TfIDFMeanNotNormalizedList5,sumNotExistHighNGramList15,cosimList15,avgTestTfIDFList15,TfIDFMeanNotNormalizedList15,label")
 
 """
-print ("it's 0")
+print ("it's 0\n\n")
 testUser(0,4)
 
-print ("it's 1")
+print ("it's 1\n\n")
 testUser(1,4)
 
-print ("it's 2")
+print ("it's 2\n\n")
 testUser(2,4)
 
-print ("it's 3")
+print ("it's 3\n\n")
 testUser(3,4)
 
-print ("it's 4")
+print ("it's 4\n\n")
 testUser(4,4)
 
-print ("it's 5")
+print ("it's 5\n\n")
 testUser(5,4)
-
-print ("it's 6")
+"""
+print ("it's 6\n\n")
 testUser(6,4)
 
-print ("it's 7")
+print ("it's 7\n\n")
 testUser(7,4)
 
-print ("it's 8")
+print ("it's 8\n\n")
 
 testUser(8,4)
-"""
-print ("it's 9")
 
-testUser(5,4)
+print ("it's 9\n\n")
+
+testUser(9,4)
+
+
+
+
+
 
 
 
