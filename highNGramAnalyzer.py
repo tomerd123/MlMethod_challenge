@@ -18,7 +18,7 @@ def find_ngrams(input_list, n=50):
 def createNGramDistDic (input_list,maxN):
 
     allHighNGramsDic={}
-    for i in range(1,maxN):
+    for i in range(maxN,maxN+1):
         distDic={}
         ngramsi=find_ngrams(input_list,i)
         for k in range(len(ngramsi)):
@@ -168,19 +168,20 @@ def TestUser(i=0,maxN=50):
     maxSum=max(sumNotExistHighNGramList)
     for s in range(len(sumNotExistHighNGramList)):
         sumNotExistHighNGramList[s]=float(float(sumNotExistHighNGramList[s]-minSum)/float(maxSum-minSum))
-        sumNotExistHighNGramList[s]=1.0-sumNotExistHighNGramList[s]
+        sumNotExistHighNGramList[s]=sumNotExistHighNGramList[s]
     #std-mean norm for avgTestTfIDFList
     TfIDFMeanNotNormalizedList=[]
     avgTfIDFList=np.array(avgTestTfIDFList).mean()
     for a in range(len(avgTestTfIDFList)):
-        TfIDFMeanNotNormalizedList.append(1.0-avgTestTfIDFList[a])
-        avgTestTfIDFList[a]=1.0-math.fabs(avgTestTfIDFList[a]-avgTfIDFList)
+        TfIDFMeanNotNormalizedList.append(avgTestTfIDFList[a])
+        avgTestTfIDFList[a]=math.fabs(avgTestTfIDFList[a]-avgTfIDFList)
 
     return maxNotExistFreqForTermList,sumNotExistHighNGramList,cosimList,avgTestTfIDFList,TfIDFMeanNotNormalizedList
 
 
-
-maxNotExistFreqForTermList,sumNotExistHighNGramList,cosimList,avgTestTfIDFList,TfIDFMeanNotNormalizedList=TestUser(5,2)
+for i in range (1,20):
+    print ("it's i: "+str(i))
+    maxNotExistFreqForTermList,sumNotExistHighNGramList,cosimList,avgTestTfIDFList,TfIDFMeanNotNormalizedList=TestUser(5,i)
 
 
 print("finished high NGram")
